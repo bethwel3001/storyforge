@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useStory } from '@/lib/story-context';
 import type { Story, StoryNode } from '@/types';
 import { Button } from '@/components/ui/button';
@@ -13,16 +13,18 @@ import { StoryVisualizer } from '@/components/story-visualizer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AnimatePresence, motion } from 'framer-motion';
 
-export default function StoryPage({ params }: { params: { id: string } }) {
+export default function StoryPage() {
   const router = useRouter();
+  const params = useParams();
   const { getStory, addNodeToStory, setCurrentNode } = useStory();
   const { toast } = useToast();
   
   const [story, setStory] = useState<Story | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
+  const storyId = Array.isArray(params.id) ? params.id[0] : params.id;
 
   // This is a workaround to get the latest story state from context
-  const storyFromContext = getStory(params.id);
+  const storyFromContext = getStory(storyId);
   useEffect(() => {
     if (storyFromContext) {
       setStory(storyFromContext);
