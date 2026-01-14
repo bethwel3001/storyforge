@@ -1,0 +1,13 @@
+--- a/node_modules/next-themes/package.json
++++ b/node_modules/next-themes/package.json
+@@ -53,6 +53,6 @@
+     "preconstruct": "preconstruct",
+     "postinstall": "preconstruct dev"
+   },
+   "peerDependencies": {
+-    "react": "^16.8 || ^17 || ^18"
++    "react": "^16.8 || ^17 || ^18 || ^19"
+   },
+   "dependencies": {
+     "react-wrap-balancer": "^1.1.0"
+
