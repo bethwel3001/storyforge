@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from 'react';
+import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import { useStory } from '@/lib/story-context';
 import type { Story, StoryNode } from '@/types';
