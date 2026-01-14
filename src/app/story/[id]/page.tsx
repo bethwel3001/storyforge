@@ -5,12 +5,11 @@ import { useRouter, useParams } from 'next/navigation';
 import { useStory } from '@/lib/story-context';
 import type { Story, StoryNode } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { continueStory } from '@/lib/actions';
-import { Loader2, ArrowLeft, GitBranch, BookText } from 'lucide-react';
+import { Loader2, ArrowLeft } from 'lucide-react';
 import { StoryVisualizer } from '@/components/story-visualizer';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function StoryPage() {
@@ -89,65 +88,63 @@ export default function StoryPage() {
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to Library
       </Button>
-      <h1 className="text-3xl md:text-4xl font-headline font-bold mb-2">{story.title}</h1>
-      <p className="text-muted-foreground mb-8">Genre: {story.genre}</p>
+      <div className="mb-8">
+        <h1 className="text-3xl md:text-4xl font-headline font-bold mb-2">{story.title}</h1>
+        <p className="text-muted-foreground">Genre: {story.genre}</p>
+      </div>
 
-      <Tabs defaultValue="story">
-        <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
-          <TabsTrigger value="story"><BookText className="mr-2 h-4 w-4" /> Story</TabsTrigger>
-          <TabsTrigger value="map"><GitBranch className="mr-2 h-4 w-4"/> Map</TabsTrigger>
-        </TabsList>
-        <TabsContent value="story" className="mt-6">
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={currentNode.id}
-                    variants={cardVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                >
-                    <Card className="max-w-4xl mx-auto shadow-lg">
-                    <CardHeader>
-                        <CardTitle className="font-headline text-2xl">Your Journey Continues...</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-lg/relaxed whitespace-pre-wrap font-body">{currentNode.storyPart}</p>
-                    </CardContent>
-                    <CardFooter className="flex-col items-start gap-4">
-                        <h3 className="font-bold text-lg font-headline">What do you do next?</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                        {currentNode.branchingPaths.length > 0 ? currentNode.branchingPaths.map((choice, index) => (
-                            <Button
-                            key={index}
-                            onClick={() => handleChoice(choice)}
-                            disabled={isLoading}
-                            variant="outline"
-                            className="text-left justify-start h-auto py-3"
-                            >
-                            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {choice}
-                            </Button>
-                        )) : (
-                            <p className="text-muted-foreground">The path ends here... for now.</p>
-                        )}
-                        </div>
-                    </CardFooter>
-                    </Card>
-                </motion.div>
-            </AnimatePresence>
-        </TabsContent>
-        <TabsContent value="map" className="mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+        <div className="lg:col-span-3">
+          <AnimatePresence mode="wait">
+              <motion.div
+                  key={currentNode.id}
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+              >
+                  <Card className="shadow-lg">
+                  <CardHeader>
+                      <CardTitle className="font-headline text-2xl">Your Journey Continues...</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                      <p className="text-lg/relaxed whitespace-pre-wrap font-body">{currentNode.storyPart}</p>
+                  </CardContent>
+                  <CardFooter className="flex-col items-start gap-4">
+                      <h3 className="font-bold text-lg font-headline">What do you do next?</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                      {currentNode.branchingPaths.length > 0 ? currentNode.branchingPaths.map((choice, index) => (
+                          <Button
+                          key={index}
+                          onClick={() => handleChoice(choice)}
+                          disabled={isLoading}
+                          variant="outline"
+                          className="text-left justify-start h-auto py-3"
+                          >
+                          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                          {choice}
+                          </Button>
+                      )) : (
+                          <p className="text-muted-foreground">The path ends here... for now.</p>
+                      )}
+                      </div>
+                  </CardFooter>
+                  </Card>
+              </motion.div>
+          </AnimatePresence>
+        </div>
+        <div className="lg:col-span-2 lg:sticky top-20">
             <Card className="h-[60vh] w-full">
                 <CardHeader>
                     <CardTitle className="font-headline">Your Narrative Map</CardTitle>
-                    <p className="text-muted-foreground">Click a node to revisit that part of the story.</p>
+                    <CardDescription>Click a node to revisit that part of the story.</CardDescription>
                 </CardHeader>
                 <CardContent className="h-[calc(100%-8rem)]">
                    <StoryVisualizer story={story} onNodeClick={handleNodeClick} />
                 </CardContent>
             </Card>
-        </TabsContent>
-      </Tabs>
+        </div>
+      </div>
     </div>
   );
 }
