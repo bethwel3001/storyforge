@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, ReactNode } from 'react';
@@ -9,7 +10,7 @@ interface StoryContextType {
   addStory: (story: Story) => void;
   getStory: (id: string) => Story | undefined;
   updateStory: (id: string, updates: Partial<Story>) => void;
-  addNodeToStory: (storyId: string, node: StoryNode, choice: string, parentId: string) => void;
+  addNodeToStory: (storyId: string, node: StoryNode) => void;
   setCurrentNode: (storyId: string, nodeId: string) => void;
 }
 
@@ -34,7 +35,7 @@ export const StoryProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const addNodeToStory = (storyId: string, node: StoryNode, choice: string, parentId: string) => {
+  const addNodeToStory = (storyId: string, node: StoryNode) => {
     setStories(prevStories =>
       prevStories.map(story => {
         if (story.id === storyId) {
