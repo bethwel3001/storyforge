@@ -148,92 +148,90 @@ export default function StoryPage() {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
-        <div className="lg:col-span-3">
-          <Card className="shadow-lg h-[75vh] flex flex-col">
-            <CardHeader>
-              <CardTitle className="font-headline text-3xl md:text-4xl">{story.title}</CardTitle>
-              <CardDescription>Genre: {story.genre}</CardDescription>
-              {story.characters && story.characters.length > 0 && (
-                <>
-                  <Separator className="my-4" />
-                  <div className="space-y-2">
-                    <h4 className="font-headline text-lg flex items-center gap-2">
-                      <Users className="w-5 h-5 text-primary" />
-                      Characters
-                    </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-                      {story.characters.map(char => (
-                        <div key={char.name}>
-                          <p className="font-bold text-base">{char.name}</p>
-                          <p className="text-sm text-muted-foreground">{char.description}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
-            </CardHeader>
-            <CardContent className="flex-1 overflow-hidden p-0">
-                <ScrollArea className="h-full" ref={scrollAreaRef}>
-                    <div className="p-6">
-                    {storyHistory.map((node, index) => (
-                        <motion.div
-                            key={node.id}
-                            variants={cardVariants}
-                            initial="hidden"
-                            animate="visible"
-                            className="mb-6"
-                        >
-                            {node.choice && (
-                                <p className="text-muted-foreground italic mb-2 font-semibold">
-                                    &gt; {node.choice}
-                                </p>
-                            )}
-                            <p className="text-lg/relaxed whitespace-pre-wrap font-body">
-                                {node.storyPart}
-                            </p>
-                        </motion.div>
+      <div className="space-y-8">
+        <Card className="shadow-lg">
+          <CardHeader>
+            <CardTitle className="font-headline text-3xl md:text-4xl">{story.title}</CardTitle>
+            <CardDescription>Genre: {story.genre}</CardDescription>
+            {story.characters && story.characters.length > 0 && (
+              <>
+                <Separator className="my-4" />
+                <div className="space-y-2">
+                  <h4 className="font-headline text-lg flex items-center gap-2">
+                    <Users className="w-5 h-5 text-primary" />
+                    Characters
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-2">
+                    {story.characters.map(char => (
+                      <div key={char.name}>
+                        <p className="font-bold text-base">{char.name}</p>
+                        <p className="text-sm text-muted-foreground">{char.description}</p>
+                      </div>
                     ))}
-                    </div>
-                </ScrollArea>
-            </CardContent>
-            {currentNode.branchingPaths.length > 0 && (
-              <CardFooter className="flex-col items-start gap-4 border-t pt-6">
-                <h3 className="font-bold text-lg font-headline">What do you do next?</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                  {currentNode.branchingPaths.map((choice, index) => {
-                      const isSelected = selectedChoice === choice;
-                      return (
-                        <motion.div key={index} whileTap={{ scale: 0.98 }}>
-                          <Button
-                            onClick={() => handleChoice(choice)}
-                            disabled={isLoading}
-                            variant={isSelected ? 'default' : 'outline'}
-                            className="text-left justify-start h-auto py-3 whitespace-normal w-full"
-                          >
-                            {isLoading && isSelected && (
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            )}
-                            {choice}
-                          </Button>
-                        </motion.div>
-                      );
-                    })}
+                  </div>
                 </div>
-              </CardFooter>
+              </>
             )}
-          </Card>
-        </div>
-        <div className="lg:col-span-2 lg:sticky top-20">
-          <div className="space-y-4">
+          </CardHeader>
+          <CardContent className="p-0">
+              <ScrollArea className="h-[50vh]" ref={scrollAreaRef}>
+                  <div className="p-6">
+                  {storyHistory.map((node, index) => (
+                      <motion.div
+                          key={node.id}
+                          variants={cardVariants}
+                          initial="hidden"
+                          animate="visible"
+                          className="mb-6"
+                      >
+                          {node.choice && (
+                              <p className="text-muted-foreground italic mb-2 font-semibold">
+                                  &gt; {node.choice}
+                              </p>
+                          )}
+                          <p className="text-lg/relaxed whitespace-pre-wrap font-body">
+                              {node.storyPart}
+                          </p>
+                      </motion.div>
+                  ))}
+                  </div>
+              </ScrollArea>
+          </CardContent>
+          {currentNode.branchingPaths.length > 0 && (
+            <CardFooter className="flex-col items-start gap-4 border-t pt-6">
+              <h3 className="font-bold text-lg font-headline">What do you do next?</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                {currentNode.branchingPaths.map((choice, index) => {
+                    const isSelected = selectedChoice === choice;
+                    return (
+                      <motion.div key={index} whileTap={{ scale: 0.98 }}>
+                        <Button
+                          onClick={() => handleChoice(choice)}
+                          disabled={isLoading}
+                          variant={isSelected ? 'default' : 'outline'}
+                          className="text-left justify-start h-auto py-3 whitespace-normal w-full"
+                        >
+                          {isLoading && isSelected && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          )}
+                          {choice}
+                        </Button>
+                      </motion.div>
+                    );
+                  })}
+              </div>
+            </CardFooter>
+          )}
+        </Card>
+        
+        <div className="space-y-4 pt-8">
             <h3 className="font-headline text-2xl">Your Narrative Map</h3>
             <p className="text-muted-foreground">Click a node to revisit that part of the story.</p>
             <div className="h-[60vh] w-full">
               <StoryVisualizer story={story} onNodeClick={handleNodeClick} />
             </div>
-          </div>
         </div>
+
       </div>
     </div>
   );
