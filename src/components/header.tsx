@@ -1,8 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Header() {
+  const pathname = usePathname();
+
+  // Don't render header on the story page
+  if (pathname.startsWith('/story/')) {
+    return null;
+  }
+  
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">

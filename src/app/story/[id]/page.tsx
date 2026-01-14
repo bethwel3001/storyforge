@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from 'react';
@@ -10,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { continueStory } from '@/lib/actions';
-import { Loader2, ArrowLeft, Share2, Download, Users } from 'lucide-react';
+import { Loader2, ArrowLeft, Share2, Download, Users, PlusCircle } from 'lucide-react';
 import { StoryVisualizer } from '@/components/story-visualizer';
 import { motion } from 'framer-motion';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -77,7 +76,7 @@ export default function StoryPage() {
 
   if (!isClient || !story || !currentNode) {
     return (
-      <div className="flex h-[calc(100vh-3.5rem)] items-center justify-center text-muted-foreground">
+      <div className="flex h-screen items-center justify-center text-muted-foreground">
         <Loader2 className="mr-2 h-6 w-6 animate-spin" />
         Loading story...
       </div>
@@ -143,6 +142,12 @@ export default function StoryPage() {
             <Button variant="outline" disabled={!canEndStory}>
                 <Share2 className="mr-2 h-4 w-4" />
                 Share
+            </Button>
+            <Button asChild>
+              <Link href="/create">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                New Story
+              </Link>
             </Button>
             <Button variant="destructive" disabled={!canEndStory}>End Story</Button>
         </div>
