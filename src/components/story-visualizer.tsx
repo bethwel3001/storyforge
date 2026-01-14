@@ -118,6 +118,8 @@ export function StoryVisualizer({ story, onNodeClick }: StoryVisualizerProps) {
                             key={pos.id}
                             initial={{ opacity: 0, scale: 0.5 }}
                             animate={{ opacity: 1, scale: 1 }}
+                            whileHover={{ scale: 1.05, boxShadow: "0px 5px 15px hsla(var(--foreground) / 0.1)" }}
+                            whileTap={{ scale: 0.98 }}
                             transition={{ duration: 0.3, delay: i * 0.05 }}
                             className="absolute"
                             style={{
@@ -133,7 +135,7 @@ export function StoryVisualizer({ story, onNodeClick }: StoryVisualizerProps) {
                                     "w-full h-full p-2 rounded-lg border-2 text-xs transition-all flex items-center justify-center text-center overflow-hidden",
                                     pos.id === story.currentNodeId
                                     ? "bg-primary border-primary text-primary-foreground shadow-lg scale-105"
-                                    : "bg-card border-border hover:border-accent hover:bg-accent/10"
+                                    : "bg-card border-border hover:border-primary"
                                 )}
                             >
                                 <p className="truncate-3-lines">{story.nodes[pos.id]?.choice || "The Beginning"}</p>
