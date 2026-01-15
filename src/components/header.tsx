@@ -28,7 +28,7 @@ export function Header() {
         <div className="flex flex-1 items-center justify-end space-x-2">
           <nav className="flex items-center gap-2">
             <Button asChild variant="ghost" size="icon">
-              <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+              <a href="https://github.com/bethwel3001/storyforge" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
                 <Github className="h-5 w-5" />
               </a>
             </Button>
