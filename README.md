@@ -4,7 +4,7 @@
 
 ![StoryForge Screenshot](public/screenshot.png?raw=true "StoryForge Interface")
 
-## ✨ Features
+## Features
 
 - **AI-Powered Narrative**: Leverages the Gemini API via Genkit to generate dynamic storylines, characters, and branching paths based on user prompts and choices.
 - **Interactive Storytelling**: Users start with a topic and genre, and their decisions directly influence the direction of the narrative.
@@ -12,7 +12,7 @@
 - **Modern Tech Stack**: Built with Next.js, React, TypeScript, and styled with Tailwind CSS and ShadCN UI components.
 - **Local Persistence**: Stories are saved in the browser's local storage, allowing users to continue their adventures at any time.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework**: [Next.js](https://nextjs.org/) (with App Router)
 - **UI**: [React](https://react.dev/) & [TypeScript](https://www.typescriptlang.org/)
@@ -21,7 +21,7 @@
 - **AI**: [Genkit](https://firebase.google.com/docs/genkit) with the Gemini API
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
 
-## 🚀 Getting Started
+## Getting Started
 
 Follow these instructions to get a local copy up and running for development and testing purposes.
 
@@ -62,7 +62,7 @@ Follow these instructions to get a local copy up and running for development and
     ```
     Open [http://localhost:9002](http://localhost:9002) in your browser to see the application.
 
-## 🤝 How to Contribute
+## How to Contribute
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -74,7 +74,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 4.  **Push to the Branch** (`git push origin feature/AmazingFeature`)
 5.  **Open a Pull Request**
 
-## 📄 License
+## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
