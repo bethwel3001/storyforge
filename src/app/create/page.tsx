@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import {useTransition} from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -15,13 +15,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { startStory } from "@/lib/actions";
 import { useStory } from "@/lib/story-context";
 import { Loader2, PenSquare } from "lucide-react";
+import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import GENRE_PARTS from "@/constants/genres";
+
 
 const formSchema = z.object({
   topic: z.string().min(10, {
@@ -29,52 +32,76 @@ const formSchema = z.object({
   }).max(200, {
     message: "Topic must not exceed 200 characters.",
   }),
-  genre: z.string().min(3, {
-    message: "Genre must be at least 3 characters.",
-  }).max(50, {
-    message: "Genre must not exceed 50 characters."
+  tone: z.string().min(3, {
+    message: "Tone should not be empty.",
   }),
+  core:z.string().min(3, {
+    message: "Core should not be empty.",
+  }),
+  modifier:z.string().min(3, {
+    message: "modifier should not be empty.",
+  }),
+  theme:z.string().min(3, {
+    message: "Theme should not be empty.",
+  }),
+
+
 });
+
+// generate a story with this format
+// Tone  modifier core  of  theme
+// "Bleak Cosmic Horror of Identity"
+const generateGenre =(tone:string,modifier:string,core:string,theme:string)=>{
+  return `${tone} ${modifier} ${core} of ${theme} story`;
+}
 
 export default function CreateStoryPage() {
   const router = useRouter();
   const { addStory } = useStory();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const[isPending,startTransition] =useTransition()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       topic: "",
-      genre: "Fantasy",
+      tone:"",
+      modifier:"",
+      core:"",
+      theme:""
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    try {
-      const newStoryData = await startStory(values.topic, values.genre);
-      const storyId = crypto.randomUUID();
-      const newStory = { ...newStoryData, id: storyId };
+    startTransition(async ()=>{
+      try {
 
-      addStory(newStory);
+        const genre =generateGenre(values.tone,values.modifier,values.core,values.theme)
+        console.log(genre)
+        const newStoryData = await startStory(values.topic, genre);
+        const storyId = crypto.randomUUID();
+        const newStory = { ...newStoryData, id: storyId };
 
-      toast({
-        title: "Story Created!",
-        description: "Your new adventure awaits.",
-      });
+        addStory(newStory);
+        toast({
+          title: "Story Created!",
+          description: "Your new adventure awaits.",
+        });
 
-      router.push(`/story/${storyId}`);
-    } catch (error) {
-      console.error(error);
-      toast({
-        variant: "destructive",
-        title: "Oh no! Something went wrong.",
-        description: "There was a problem creating your story. Please try again.",
-      });
-      setIsLoading(false);
-    }
+        router.push(`/story/${storyId}`);
+      } catch (error) {
+        console.error(error);
+        toast({
+          variant: "destructive",
+          title: "Oh no! Something went wrong.",
+          description: "There was a problem creating your story. Please try again.",
+        });
+
+      }
+    })
+
   }
+
 
   return (
     <div className="container py-8 md:py-12">
@@ -113,25 +140,124 @@ export default function CreateStoryPage() {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="genre"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Genre</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., Sci-Fi, Fantasy, Mystery" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        The genre helps the AI set the tone.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className={"flex flex-wrap w-full items-center gap-2"}>
+                  <FormField
+                      control={form.control}
+                      rules={{ required: true }}
+                      name={"tone"}
+                      render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tone</FormLabel>
+                            <Select
+                                value={field.value}
+                                onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-[180px]">
+                                  <SelectValue placeholder="Select a tone" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectGroup>
+                                  {GENRE_PARTS.tone.map((tone,index)=>(
+                                      <SelectItem value={tone} key={index}>{tone}</SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                      )}
+                  />
+                  <FormField
+                      control={form.control}
+                      rules={{ required: true }}
+                      name={"core"}
+                      render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Story Genre</FormLabel>
+                            <Select
+                                value={field.value}
+                                onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-[180px]">
+                                  <SelectValue placeholder="Select a core" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectGroup>
+                                  {GENRE_PARTS.core.map((genre,index)=>(
+                                      <SelectItem value={genre} key={index}>{genre}</SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                      )}
+                  />
+                  <FormField
+                      control={form.control}
+                      rules={{ required: true }}
+                      name={"modifier"}
+                      render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Story Modifier</FormLabel>
+                            <Select
+                                value={field.value}
+                                onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-[180px]">
+                                  <SelectValue placeholder="Select a modifier" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectGroup>
+                                  {GENRE_PARTS.modifier.map((modifier,index)=>(
+                                      <SelectItem value={modifier} key={index}>{modifier}</SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                      )}
+                  />
+                  <FormField
+                      control={form.control}
+                      rules={{ required: true }}
+                      name={"theme"}
+                      render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Theme</FormLabel>
+                            <Select
+                                value={field.value}
+                                onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-[180px]">
+                                  <SelectValue placeholder="Select a theme" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectGroup>
+                                  {GENRE_PARTS.theme.map((theme,index)=>(
+                                      <SelectItem value={theme} key={index}>{theme}</SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                      )}
+                  />
+
+                </div>
                 <div className="flex justify-center pt-4">
-                  <Button type="submit" disabled={isLoading} size="lg">
-                    {isLoading ? (
+                  <Button type="submit" disabled={isPending} size="lg">
+                    {isPending ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Conjuring...

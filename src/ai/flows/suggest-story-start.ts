@@ -39,7 +39,10 @@ const suggestStoryStartPrompt = ai.definePrompt({
   name: 'suggestStoryStartPrompt',
   input: {schema: SuggestStoryStartInputSchema},
   output: {schema: SuggestStoryStartOutputSchema},
-  prompt: `You are a creative story writer. Given a topic and genre, create a compelling starting point for a story.
+  prompt: `You are a creative story writer. Given a topic and genre in the format
+// Tone  modifier core  of  theme
+Example theme: "Bleak Cosmic Horror of Identity story"
+, create a compelling starting point for a story.
 
 You must define 2-3 main characters with vivid descriptions.
 Then, write an opening storyline that introduces the setting and the initial situation.
