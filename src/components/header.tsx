@@ -6,20 +6,16 @@ import { usePathname } from "next/navigation";
 import { BookOpen, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import {cn} from "@/lib/utils";
 
 export function Header() {
   const pathname = usePathname();
-
-  // Don't render header on the story page
-  if (pathname.startsWith('/story/')) {
-    return null;
-  }
-  
   return (
-    <header className="relative w-full border-b bg-background">
+    <header className={cn(pathname.startsWith('/story/')&&"!hidden",
+        "flex flex-col mx-auto justify-center items-center fixed py-1 backdrop-blur-lg z-[999] w-full border-b bg-background")}>
       <div className="container flex h-14 items-center">
         <div className="mr-4 flex items-center">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex cursor-pointer items-center gap-2">
             <BookOpen className="h-6 w-6 text-primary" />
           </Link>
         </div>

@@ -46,8 +46,14 @@ export default function StoryPage() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+  useEffect(()=>{
 
-  const storyFromContext = useMemo(() => isClient ? getStory(storyId) : undefined, [isClient, getStory, storyId]);
+  },[storyId])
+  let storyFromContext:Story|undefined;
+  if(storyId){
+    storyFromContext= useMemo(() => isClient ? getStory(storyId) : undefined, [isClient, getStory, storyId]);
+  }
+
 
   useEffect(() => {
     if (storyFromContext) {
@@ -200,34 +206,35 @@ export default function StoryPage() {
         </div>
       </div>
       
-      <div className="space-y-8">
-        <Card className="shadow-lg">
-          <CardHeader>
-            <CardTitle className="font-headline text-3xl md:text-4xl">{story.title}</CardTitle>
-            <CardDescription>Genre: {story.genre}</CardDescription>
-            {story.characters && story.characters.length > 0 && (
-              <>
-                <Separator className="my-4" />
-                <div className="space-y-2">
-                  <h4 className="font-headline text-lg flex items-center gap-2">
-                    <Users className="w-5 h-5 text-primary" />
-                    Characters
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-2">
-                    {story.characters.map(char => (
-                      <div key={char.name}>
-                        <p className="font-bold text-base">{char.name}</p>
-                        <p className="text-sm text-muted-foreground">{char.description}</p>
+      <div className="space-y-8 mt-8">
+        <div className={"flex flex-col md:grid md:grid-cols-12  gap-4"}>
+          <Card className="shadow-lg rounded-lg border-none col-start-1 col-end-10">
+            <CardHeader className={"space-y-3"}>
+              <CardTitle className="font-headline text-3xl md:text-4xl">{story.title}</CardTitle>
+              <CardDescription><span className={"text-lg font-bold text-primary"}>Genre:</span>  {story.genre}</CardDescription>
+              {story.characters && story.characters.length > 0 && (
+                  <>
+                    <Separator className="my-4" />
+                    <div className="space-y-2">
+                      <h4 className="font-headline text-lg flex items-center gap-2">
+                        <Users className="w-5 h-5 text-primary" />
+                        Characters
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-2">
+                        {story.characters.map(char => (
+                            <div className={"py-3 bg-gray-400/20 px-1 rounded-xl"} key={char.name}>
+                              <p className="font-bold text-base">{char.name}</p>
+                              <p className="text-sm text-muted-foreground">{char.description}</p>
+                            </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-          </CardHeader>
-          <CardContent className="p-0">
+                    </div>
+                  </>
+              )}
+            </CardHeader>
+            <CardContent className="p-0">
               <ScrollArea className="h-[50vh]" ref={scrollAreaRef}>
-                  <div className="p-6">
+                <div className="p-6">
                   {storyHistory.map((node) => (
                       <motion.div
                           key={node.id}
@@ -236,45 +243,48 @@ export default function StoryPage() {
                           animate="visible"
                           className="mb-6"
                       >
-                          {node.choice && (
-                              <p className="text-muted-foreground italic mb-2 font-semibold">
-                                  &gt; {node.choice}
-                              </p>
-                          )}
-                          <p className="text-lg/relaxed whitespace-pre-wrap font-body">
-                              {node.storyPart}
-                          </p>
+                        {node.choice && (
+                            <p className="text-muted-foreground italic mb-2 font-semibold">
+                              &gt; {node.choice}
+                            </p>
+                        )}
+                        <p className="text-lg/relaxed whitespace-pre-wrap font-body">
+                          {node.storyPart}
+                        </p>
                       </motion.div>
                   ))}
-                  </div>
+                </div>
               </ScrollArea>
-          </CardContent>
+            </CardContent>
+
+          </Card>
           {currentNode.branchingPaths.length > 0 && !story.isComplete && (
-            <CardFooter className="flex-col items-start gap-4 border-t pt-6">
-              <h3 className="font-bold text-lg font-headline">What do you do next?</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                {currentNode.branchingPaths.map((choice, index) => {
+              <div className="col-start-10 flex sticky top-10 flex-col col-end-13 bg-gray-400/20 h-fit px-2 py-1 rounded-xl items-start gap-4 border-t pt-6">
+                <h3 className="font-bold text-lg font-headline">What do you do next?</h3>
+                <div className="grid grid-cols-1 md:grid-cols-1 my-2 gap-2 w-full">
+                  {currentNode.branchingPaths.map((choice, index) => {
                     const isSelected = selectedChoice === choice;
                     return (
-                      <motion.div key={index} whileTap={{ scale: 0.98 }}>
-                        <Button
-                          onClick={() => handleChoice(choice)}
-                          disabled={isLoading}
-                          variant={isSelected ? 'default' : 'outline'}
-                          className="text-left justify-start h-auto py-3 whitespace-normal w-full"
-                        >
-                          {isLoading && isSelected && (
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          )}
-                          {choice}
-                        </Button>
-                      </motion.div>
+                        <motion.div key={index} whileTap={{ scale: 0.98 }}>
+                          <Button
+                              onClick={() => handleChoice(choice)}
+                              disabled={isLoading}
+                              variant={isSelected ? 'default' : 'outline'}
+                              className="text-left justify-start h-auto py-3 whitespace-normal w-full"
+                          >
+                            {isLoading && isSelected && (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            )}
+                            {choice}
+                          </Button>
+                        </motion.div>
                     );
                   })}
+                </div>
               </div>
-            </CardFooter>
           )}
-        </Card>
+        </div>
+
         
         <div className="space-y-4 pt-8">
             <h3 className="font-headline text-2xl">Your Narrative Map</h3>
